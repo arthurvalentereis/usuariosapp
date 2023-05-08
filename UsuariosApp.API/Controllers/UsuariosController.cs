@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UsuariosApp.Application.Interfaces;
+using UsuariosApp.Application.Models.Responses;
 
 namespace UsuariosApp.API.Controllers
 {
@@ -6,7 +8,11 @@ namespace UsuariosApp.API.Controllers
     [ApiController]
     public class UsuariosController : Controller
     {
-        public UsuariosController() { }
+        private readonly IUsuarioAppService? _usuarioAppService;
+        public UsuariosController(IUsuarioAppService? usuarioAppService) 
+        {
+            _usuarioAppService = usuarioAppService;
+        }
 
         /// <summary>
         /// Autenticação de usuários
@@ -14,6 +20,9 @@ namespace UsuariosApp.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("autenticar")]
+        [ProducesResponseType(typeof(AutenticarResponseDTO),StatusCodes.Status200OK)]
+        [ProducesErrorResponseType(typeof(void))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Autenticar()
         {
             return Ok();
@@ -24,6 +33,7 @@ namespace UsuariosApp.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("criar-conta")]
+        [ProducesResponseType(typeof(CriarContaResponseDTO),StatusCodes.Status201Created)]
         public IActionResult CriarConta()
         {
             return Ok();
