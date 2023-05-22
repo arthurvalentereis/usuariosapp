@@ -1,4 +1,5 @@
 using UsuariosApp.API.Extensions;
+using UsuariosApp.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,8 @@ builder.Services.AddRouting( options => options.LowercaseUrls = true );
 builder.Services.AddEntityFramework(builder.Configuration);
 builder.Services.AddSwaggerDoc();
 builder.Services.AddServices();
+//Automapper precisa ser injetado após o AddServices
+builder.Services.AddAutoMapper();
 
 var app = builder.Build();
 
@@ -18,6 +21,8 @@ app.UseSwaggeDoc();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();
 

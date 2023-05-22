@@ -1,10 +1,10 @@
 ﻿using UsuarioApp.Domain.Interfaces.Repositories;
 using UsuarioApp.Domain.Interfaces.Services;
-using UsuarioApp.Domain.Services;
 using UsuarioApp.Infra.Data.Contexts;
 using UsuarioApp.Infra.Data.Repositories;
 using UsuariosApp.Application.Interfaces;
 using UsuariosApp.Application.Services;
+using UsuariosApp.Domain.Services;
 
 namespace UsuariosApp.API.Extensions
 {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using UsuariosApp.Application.Interfaces;
 using UsuariosApp.Application.Models.Request;
 using UsuariosApp.Application.Models.Requests;
+using UsuariosApp.Application.Models.Response;
 using UsuariosApp.Application.Models.Responses;
 
 namespace UsuariosApp.API.Controllers
@@ -26,8 +27,7 @@ namespace UsuariosApp.API.Controllers
         [ProducesResponseType(typeof(AutenticarResponseDTO), StatusCodes.Status200OK)]
         public IActionResult Autenticar(AutenticarRequestDTO dto)
         {
-            //TODO
-            return Ok();
+            return StatusCode(200, _usuarioAppService?.Autenticar(dto));
         }
 
         /// <summary>
@@ -39,6 +39,17 @@ namespace UsuariosApp.API.Controllers
         public IActionResult CriarConta(CriarContaRequestDTO dto)
         {
             return StatusCode(201, _usuarioAppService?.CriarConta(dto));
+        }
+
+        /// <summary>
+        /// Recuperação de senha do usuário
+        /// </summary>
+        [HttpPost]
+        [Route("recuperar-senha")]
+        [ProducesResponseType(typeof(RecuperarSenhaResponseDTO), StatusCodes.Status200OK)]
+        public IActionResult RecuperarSenha(RecuperarSenhaRequestDTO dto)
+        {
+            return StatusCode(200, _usuarioAppService?.RecuperarSenha(dto));
         }
     }
 }
