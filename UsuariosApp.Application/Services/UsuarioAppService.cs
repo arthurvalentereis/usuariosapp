@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using UsuarioApp.Domain.Interfaces.Services;
 using UsuarioApp.Domain.Models;
 using UsuariosApp.Application.Helpers;
-using UsuariosApp.Application.Interfaces;
+using UsuariosApp.Application.Interfaces.Producers;
+using UsuariosApp.Application.Interfaces.Services;
+using UsuariosApp.Application.Models.Producers;
 using UsuariosApp.Application.Models.Request;
 using UsuariosApp.Application.Models.Requests;
 using UsuariosApp.Application.Models.Response;
@@ -20,11 +22,13 @@ namespace UsuariosApp.Application.Services
     {
         private readonly IUsuarioDomainService? _usuarioDomainService;
         private readonly IMapper? _mapper;
+        private readonly IUsuarioMessageProducer _messageProducer;
 
-        public UsuarioAppService(IUsuarioDomainService? usuarioDomainService, IMapper? mapper)
+        public UsuarioAppService(IUsuarioDomainService? usuarioDomainService, IMapper? mapper, IUsuarioMessageProducer messageProducer)
         {
             _usuarioDomainService = usuarioDomainService;
             _mapper = mapper;
+            _messageProducer = messageProducer;
         }
 
         public AutenticarResponseDTO Autenticar(AutenticarRequestDTO dto)
@@ -37,6 +41,15 @@ namespace UsuariosApp.Application.Services
         {
             var usuario = _mapper?.Map<Usuario>(dto);
             _usuarioDomainService?.CriarConta(usuario);
+            var usuarioMessageDTO = new UsuarioMessageDTO
+            {
+                Tipo = TipoMensagem.CriacaoDeConta,
+                DataHora = DateTime.UtcNow,
+                IdUsuario = usuario.Id,
+                NomeUsuario = usuario.Nome,
+                EmailUsuario = usuario.Email,
+            };
+            _messageProducer.Send(usuarioMessageDTO);
 
             return _mapper.Map<CriarContaResponseDTO>(usuario);
         }

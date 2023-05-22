@@ -127,3 +127,45 @@ namespace UsuariosApp.Tests.Helpers
 }
 
 ```
+
+
+
+## Orquestração docker
+- No projeto API clique com a direita `Adicionar > Suporte de Orquestrador de Contêiner`
+- Ele irá gerar um arquivo base e você precisará adicionar as dependências desse projeto como segue abaixo: 
+````yml
+version: '3.4'
+
+services:
+  usuariosapp.api:
+    image: ${DOCKER_REGISTRY-}usuariosappapi
+    build:
+      context: .
+      dockerfile: UsuariosApp.API/Dockerfile
+    ports:
+        - "8080:8080"
+    depends_on:
+        - db
+    links:
+        - rabbitmq
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+        SA_PASSWORD: "@Coti2023"
+        ACCEPT_EULA: "Y"
+    ports:
+        - "1433:1433"
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: "rabbitmq"
+    ports:
+        - "5672:5672"
+        - "15672:15672"
+
+
+
+```` 
+- Após isso você precisara abrir CMD, acessar a pasta `C:\Users\infis001077\source\repos\UsuariosApp`
+
+- Use o comando `docker-compose build` ou `docker-compose -d` (que irá buildar e logo em seguida usar o up)
+- Ele baixará as dependÊncia e por ultimo utilize o comando `docker-compose up` 

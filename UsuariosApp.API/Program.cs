@@ -9,8 +9,8 @@ builder.Services.AddRouting( options => options.LowercaseUrls = true );
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEntityFramework(builder.Configuration);
 builder.Services.AddSwaggerDoc();
-builder.Services.AddServices();
 //Automapper precisa ser injetado após o AddServices
+builder.Services.AddServices(builder.Configuration);
 builder.Services.AddAutoMapper();
 
 var app = builder.Build();
