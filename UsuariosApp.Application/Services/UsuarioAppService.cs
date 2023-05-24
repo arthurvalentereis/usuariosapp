@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using UsuarioApp.Domain.Interfaces.Services;
 using UsuarioApp.Domain.Models;
 using UsuariosApp.Application.Helpers;
+using UsuariosApp.Application.Interfaces.Identities;
 using UsuariosApp.Application.Interfaces.Producers;
 using UsuariosApp.Application.Interfaces.Services;
 using UsuariosApp.Application.Models.Producers;
@@ -22,19 +23,25 @@ namespace UsuariosApp.Application.Services
     {
         private readonly IUsuarioDomainService? _usuarioDomainService;
         private readonly IMapper? _mapper;
-        private readonly IUsuarioMessageProducer _messageProducer;
+        private readonly IUsuarioMessageProducer? _messageProducer;
+        private readonly ITokenCreator? _tokenCreator;
 
-        public UsuarioAppService(IUsuarioDomainService? usuarioDomainService, IMapper? mapper, IUsuarioMessageProducer messageProducer)
+        public UsuarioAppService(IUsuarioDomainService? usuarioDomainService, IMapper? mapper, IUsuarioMessageProducer? messageProducer, ITokenCreator? tokenCreator)
         {
             _usuarioDomainService = usuarioDomainService;
             _mapper = mapper;
             _messageProducer = messageProducer;
+            _tokenCreator = tokenCreator;
         }
 
         public AutenticarResponseDTO Autenticar(AutenticarRequestDTO dto)
         {
             var usuario = _usuarioDomainService?.Autenticar(dto.Email, Sha1Helper.Encrypt(dto.Senha));
-            return _mapper.Map<AutenticarResponseDTO>(usuario);
+            var response = _mapper.Map<AutenticarResponseDTO>(usuario);
+
+            response.AccessToken = _tokenCreator.Create(usuario.Email, "USER_ROLE");
+            response.DataHoraExpiracao = DateTime.UtcNow.AddHours(1);
+            return response;
         }
 
         public CriarContaResponseDTO CriarConta(CriarContaRequestDTO dto)

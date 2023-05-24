@@ -128,7 +128,10 @@ namespace UsuariosApp.Tests.Helpers
 
 ```
 
+## Gerar arquivo docker (Dockerfile)
 
+
+![GerarDockerFile](Documentos/gerar-docker-file.png)
 
 ## Orquestração docker
 - No projeto API clique com a direita `Adicionar > Suporte de Orquestrador de Contêiner`
@@ -165,7 +168,97 @@ services:
 
 
 ```` 
+
+## versão 2 orquestador
+````yml
+version: '3.4'
+
+#nos comentarios nao adicionar acentuacao senao vai quebrar no momento de dar docker-compose build
+services:
+  usuariosapp.api:
+    container_name: usuariosapp_api #define os nomes da aplicacao
+    image: ${DOCKER_REGISTRY-}usuariosappapi
+    build:
+      context: .
+      dockerfile: UsuariosApp.API/Dockerfile
+    ports:
+        - 54321:80  
+    depends_on: #Define as dependencias do projeto
+        - db 
+        - rabbitmq
+  db: #esse nome voce pode definir da forma que voce quiser
+    container_name: usuariosapp_db
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+        SA_PASSWORD: "@Coti2023"
+        ACCEPT_EULA: "Y"
+    ports:
+        - "1433:1433"
+  rabbitmq:
+    container_name: usuariosapp_rabbitmq
+    image: rabbitmq:3-management
+    hostname: "rabbitmq"
+    ports:
+        - "5672:5672"
+        - "15672:15672"
+    expose:
+        - 5672   # Por mais que as portas estejam ja definidas as vezes acontece de nao conseguir abrir
+        - 15761  # para evitar esse problema utilize o expose para forcar a saida da porta 
+    environment:
+        - RABBITMQ_DEFAULT_USER=guest
+        - RABBITMQ_DEFAULT_PASS=guest
+
+
+
+````
+
+
 - Após isso você precisara abrir CMD, acessar a pasta `C:\Users\infis001077\source\repos\UsuariosApp`
 
 - Use o comando `docker-compose build` ou `docker-compose -d` (que irá buildar e logo em seguida usar o up)
 - Ele baixará as dependÊncia e por ultimo utilize o comando `docker-compose up` 
+- Para derrubar o docker, vai na pasta local do docker `docker-compose down` isso irá limpar todos container e deletar tudo. Pra caso de bugs etc pode seguir esses comandos 
+  - `docker-compose down`  - Limpa todos container deleta toda selas, caso tenha banco de dados dentro do projeto ele irá derrubar o banco de dados também, todos os dados serão perdidos
+  - `docker-compose build` - Builda novamente todas configs do docker-compose.yml
+  - `docker-compose up` - sobe aplicação
+
+
+
+Web.API via docker configs
+```json
+
+//Nota que nessa configuração data source=db aponta apra db, que é o nome da imagem que subiu no docker
+{
+  "ConnectionStrings": {
+    "UsuariosApp": "Data Source=db;Initial Catalog=master;User ID=sa;Password=@Coti2023;TrustServerCertificate=true;"
+  },
+  "MessageSettings": {
+    "Hostname": "rabbitmq",
+    "Port": 5672,
+    "Username": "guest",
+    "Password": "guest",
+    "Queue": "mensagens_usuario"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
+```
+
+
+
+Gerar migration por fora
+```json
+//Nota que nessa configuração data source acessa por fora o banco de dados, para poder realizar testes e subir migrations
+{
+  "ConnectionStrings": {
+    "UsuariosApp": "Data Source=localhost,1433;Initial Catalog=master;User ID=sa;Password=@Coti2023;TrustServerCertificate=true;"
+  }
+}
+
+```
+

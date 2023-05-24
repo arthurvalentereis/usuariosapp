@@ -23,7 +23,14 @@ namespace UsuariosApp.Infra.Messages.Producers
 
         public void Send(UsuarioMessageDTO dto)
         {
-            var _connectionFactory = new ConnectionFactory() { Uri = new Uri(_messageSettings?.Url) };
+            var _connectionFactory = new ConnectionFactory()
+            {
+                HostName = _messageSettings?.Hostname,
+                Port = _messageSettings.Port,
+                UserName = _messageSettings.Username,
+                Password = _messageSettings.Password
+            };
+
             using (var connection = _connectionFactory.CreateConnection())
             {
                 //conectando na fila do MessageBroker
