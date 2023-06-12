@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: UsuariosApp.API/Dockerfile
     ports:
-        - 54321:80  
+        - 54321:80   #porta que sera exportada 54321
     depends_on: #Define as dependencias do projeto
         - db 
         - rabbitmq

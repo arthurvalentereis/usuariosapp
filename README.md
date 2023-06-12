@@ -221,6 +221,12 @@ services:
   - `docker-compose down`  - Limpa todos container deleta toda selas, caso tenha banco de dados dentro do projeto ele irá derrubar o banco de dados também, todos os dados serão perdidos
   - `docker-compose build` - Builda novamente todas configs do docker-compose.yml
   - `docker-compose up` - sobe aplicação
+  - Antes de publicar use o comando `docker image ls` para saber todos repositórios no dokcer desktop e a versão 
+  - Para publicar no dockerhub, acesse a pasta do projeto `C:\Users\your_user\source\repos\UsuariosApp` e utilize o comando `docker login`, faça autenticação com base no seu usuário e senha do dockerhub
+  - Após isso publique `docker tag usuariosappapi:latest arthurvreis/usuariosappapi`
+  -  `docker tag usuariosappapi:latest` repositório app local
+  -  `arthurvreis/usuariosappapi` repositório no docker hub que você precisa criar
+  - Depois dessas configurações dê o push `docker push arthurvreis/usuariosappapi`
 
 
 

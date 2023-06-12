@@ -1,3 +1,4 @@
+using EstoqueApp.API.Extensions;
 using UsuariosApp.API.Extensions;
 using UsuariosApp.API.Middlewares;
 
@@ -11,12 +12,14 @@ builder.Services.AddEntityFramework(builder.Configuration);
 builder.Services.AddSwaggerDoc();
 //Automapper precisa ser injetado após o AddServices
 builder.Services.AddServices(builder.Configuration);
+builder.Services.AddJwtBearer(builder.Configuration);
 builder.Services.AddAutoMapper();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseSwaggeDoc();
+app.UseSwaggerDoc();
+app.UseAuthentication();
 
 app.UseAuthorization();
 

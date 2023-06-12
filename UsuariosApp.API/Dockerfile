@@ -10,6 +10,8 @@ COPY ["UsuariosApp.API/UsuariosApp.API.csproj", "UsuariosApp.API/"]
 COPY ["UsuarioApp.Domain/UsuarioApp.Domain.csproj", "UsuarioApp.Domain/"]
 COPY ["UsuarioApp.Infra.Data/UsuarioApp.Infra.Data.csproj", "UsuarioApp.Infra.Data/"]
 COPY ["UsuariosApp.Application/UsuariosApp.Application.csproj", "UsuariosApp.Application/"]
+COPY ["UsuariosApp.Infra.Identity/UsuariosApp.Infra.Identity.csproj", "UsuariosApp.Infra.Identity/"]
+COPY ["UsuariosApp.Infra.Messages/UsuariosApp.Infra.Messages.csproj", "UsuariosApp.Infra.Messages/"]
 RUN dotnet restore "UsuariosApp.API/UsuariosApp.API.csproj"
 COPY . .
 WORKDIR "/src/UsuariosApp.API"
