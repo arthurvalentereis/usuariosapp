@@ -50,5 +50,9 @@ ipch/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+docker-compose.yml
+docker-compose.dcproj
+docker-compose.override.yml
+UsuariosApp.API/Dockerfile
 
 
