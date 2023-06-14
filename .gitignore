@@ -56,3 +56,8 @@ docker-compose.override.yml
 UsuariosApp.API/Dockerfile
 
 
+/.dockerignore
+/docker-compose.yml
+/docker-compose.override.yml
+/UsuariosApp.API/Dockerfile
+/docker-compose.dcproj
